@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.slideshow.SlideshowFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/txt_lbl_class_teacher_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/class_teacher" />
+
+            <EditText
+                android:id="@+id/edit_class_teacher_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class_teacher_name"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_class_teacher_name"
+                android:layout_marginTop="10dp"
+                android:text="@string/class_name" />
+
+            <EditText
+                android:id="@+id/edit_class_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class_name"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class_fees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_class_name"
+                android:layout_marginTop="10dp"
+                android:text="@string/class_fees" />
+
+            <EditText
+                android:id="@+id/edit_class_fees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class_fees"
+                android:inputType="numberDecimal"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class_exam_fees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_class_fees"
+                android:layout_marginTop="10dp"
+                android:text="@string/class_exam_fees" />
+
+            <EditText
+                android:id="@+id/edit_class_exam_fees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class_exam_fees"
+                android:inputType="numberDecimal"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:id="@+id/btn_add_class"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_class_exam_fees"
+                android:layout_marginTop="10dp"
+                android:text="@string/add_class" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

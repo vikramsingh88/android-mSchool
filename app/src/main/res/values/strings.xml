@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">mSchool</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Smt Rooprani Vidya Mandir</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Classes</string>
+    <string name="menu_add_student">Add Student</string>
+    <string name="menu_slideshow">Add new class</string>
+    <string name="home_second">Home Second</string>
+    <string name="user_name">User name</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_student">Add Student</string>
+    <string name="update_student">Update Student</string>
+    <string name="student_name">Student name</string>
+    <string name="father_s_name">Father\'s name</string>
+    <string name="address">Address</string>
+    <string name="student_class">Student class</string>
+    <string name="class_teacher">Class Teacher</string>
+    <string name="spinner_title">Select class</string>
+    <string name="students">Students</string>
+    <string name="registration_date">Registration date</string>
+    <string name="add_fee">Add fees</string>
+    <string name="fee_type">Fees type</string>
+    <string name="amount">Amount</string>
+    <string name="fee_date">Fees date</string>
+    <string name="fees_for_the_month">Fees for the month</string>
+    <string name="fees_submitted_date">Fees submitted date</string>
+    <string name="class_name">Class Name</string>
+    <string name="add_class">Add Class</string>
+    <string name="class_fees">Class Monthly Fees</string>
+    <string name="class_exam_fees">Class Exam Fees</string>
+    <string name="month">Month</string>
+    <string name="fee_paid">Fee paid</string>
+    <string name="remaining_fee">Remaining Fee</string>
+    <string name="advance_fee">Advance Fee</string>
+    <string name="add_new_class">Add new class</string>
+    <string name="classes">Classes</string>
+    <string name="update_class">Update Class</string>
+</resources>

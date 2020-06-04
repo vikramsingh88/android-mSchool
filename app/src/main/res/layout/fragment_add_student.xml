@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.student.AddStudentFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:id="@+id/img_student"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_avatar" />
+
+            <TextView
+                android:id="@+id/txt_lbl_student_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_student"
+                android:layout_marginTop="10dp"
+                android:text="@string/student_name" />
+
+            <EditText
+                android:id="@+id/edit_student_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_student_name"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_father_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_student_name"
+                android:layout_marginTop="10dp"
+                android:text="@string/father_s_name" />
+
+            <EditText
+                android:id="@+id/edit_father_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_father_name"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_father_name"
+                android:layout_marginTop="10dp"
+                android:text="@string/address" />
+
+            <EditText
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_address"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_address"
+                android:layout_marginTop="10dp"
+                android:text="@string/student_class" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class"
+                android:prompt="@string/spinner_title" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinner"
+                android:layout_marginTop="10dp"
+                android:text="@string/class_teacher" />
+
+            <EditText
+                android:id="@+id/edit_class_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_class_teacher"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:id="@+id/btn_add_student"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_class_teacher"
+                android:layout_marginTop="10dp"
+                android:text="@string/add_student" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

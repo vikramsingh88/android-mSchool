@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/keyboard_row">
+
+    <TextView
+        android:id="@+id/txt_td_fees_type"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/fee_type" />
+
+    <TextView
+        android:id="@+id/text_td_month"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/month" />
+
+    <TextView
+        android:id="@+id/txt_td_fees_for_month"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/fees_for_the_month" />
+
+    <TextView
+        android:id="@+id/txt_td_fees_paid"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/fee_paid" />
+
+    <TextView
+        android:id="@+id/txt_td_remaining_fees"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/remaining_fee" />
+
+    <TextView
+        android:id="@+id/txt_td_advance_fee"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/advance_fee" />
+
+    <TextView
+        android:id="@+id/txt_td_date"
+        style="@style/score_board_header"
+        android:background="@color/colorTableHeader"
+        android:text="@string/fees_submitted_date" />
+
+</TableRow>
