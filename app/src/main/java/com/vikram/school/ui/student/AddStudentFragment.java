@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,16 +30,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.vikram.school.R;
 import com.vikram.school.ui.home.ClassesListResponse;
 import com.vikram.school.ui.home.HomeViewModel;
 import com.vikram.school.ui.slideshow.Classes;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.ImagePickerActivity;
+import com.vikram.school.utility.PreferenceManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,17 +60,17 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
     private EditText editFatherName;
     private EditText editAddress;
     private EditText editClassTeacher;
-    private ImageView imgProfile;
+    private CircularImageView imgProfile;
     private Button btnAddStudent;
     private String mSelectedClass;
     private HomeViewModel homeViewModel;
     private StudentViewModel studentViewModel;
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    private Bitmap roundedBitmap;
+    public static final int REQUEST_IMAGE = 100;
     private String selectedClass;
     private boolean isUpdate;
     private String studentId;
+    private ProgressBar mAddProgressBar;
+    private Bitmap bitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,13 +80,14 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         studentViewModel = ViewModelProviders.of(this).get(StudentViewModel.class);
         spinner = (Spinner) findViewById(R.id.spinner);
-        editStudentName = (EditText)findViewById(R.id.edit_student_name);
-        editFatherName = (EditText)findViewById(R.id.edit_father_name);
-        editAddress = (EditText)findViewById(R.id.edit_address);
-        editClassTeacher = (EditText)findViewById(R.id.edit_class_teacher);
+        editStudentName = (EditText) findViewById(R.id.edit_student_name);
+        editFatherName = (EditText) findViewById(R.id.edit_father_name);
+        editAddress = (EditText) findViewById(R.id.edit_address);
+        editClassTeacher = (EditText) findViewById(R.id.edit_class_teacher);
         btnAddStudent = (Button) findViewById(R.id.btn_add_student);
-        imgProfile = (ImageView) findViewById(R.id.img_student);
+        imgProfile = (CircularImageView) findViewById(R.id.img_student);
         spinner.setOnItemSelectedListener(this);
+        mAddProgressBar = findViewById(R.id.add_student_progress);
 
         Intent intent = getIntent();
         selectedClass = intent.getStringExtra("student_class");
@@ -103,80 +117,82 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             }
         });
 
+        // Clearing older images from cache directory
+        // don't call this line if you want to choose multiple images in the same activity
+        // call this once the bitmap(s) usage is over
+        ImagePickerActivity.clearCache(this);
         imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                capturePicture();
+                onProfileImageClick();
             }
         });
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            roundedBitmap = getRoundedRectBitmap(photo);
-            imgProfile.setImageBitmap(roundedBitmap);
-        }
-    }
-
-    private void capturePicture() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-            } else {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getParcelableExtra("path");
+                try {
+                    // update this bitmap to your server
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    // loading profile image from local cache
+                    loadProfile(uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } else {
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
         }
     }
 
-    private Bitmap getRoundedRectBitmap(Bitmap bitmap) {
-        Bitmap result = null;
-        try {
-            result = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(result);
-            int color = 0xff424242;
-            Paint paint = new Paint();
-            Rect rect = new Rect(0, 0, 200, 200);
-            paint.setAntiAlias(true);
-            canvas.drawARGB(0, 0, 0, 0);
-            paint.setColor(color);
-            canvas.drawCircle(50, 50, 50, paint);
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-            canvas.drawBitmap(bitmap, rect, rect, paint);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (OutOfMemoryError o) {
-            o.printStackTrace();
-        }
-        return result;
+    private void loadProfile(Uri uri) {
+        Log.d(TAG, "Image cache path: " + uri);
+        imgProfile.setImageURI(uri);
     }
-    
+
+    void onProfileImageClick() {
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            launchCameraIntent();
+                        }
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            Log.d(TAG, "Permission denied");
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
+    }
+
+    private void launchCameraIntent() {
+        Intent intent = new Intent(AddStudentFragment.this, ImagePickerActivity.class);
+        intent.putExtra(ImagePickerActivity.INTENT_IMAGE_PICKER_OPTION, ImagePickerActivity.REQUEST_IMAGE_CAPTURE);
+        // setting aspect ratio
+        intent.putExtra(ImagePickerActivity.INTENT_LOCK_ASPECT_RATIO, true);
+        intent.putExtra(ImagePickerActivity.INTENT_ASPECT_RATIO_X, 1); // 16x9, 1x1, 3:4, 3:2
+        intent.putExtra(ImagePickerActivity.INTENT_ASPECT_RATIO_Y, 1);
+        // setting maximum bitmap width and height
+        intent.putExtra(ImagePickerActivity.INTENT_SET_BITMAP_MAX_WIDTH_HEIGHT, true);
+        intent.putExtra(ImagePickerActivity.INTENT_BITMAP_MAX_WIDTH, 100);
+        intent.putExtra(ImagePickerActivity.INTENT_BITMAP_MAX_HEIGHT, 100);
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
     private void addStudent() {
         String studentName = editStudentName.getText().toString();
         String fatherName = editFatherName.getText().toString();
         String address = editAddress.getText().toString();
         String classTeacher = editClassTeacher.getText().toString();
-        
+
         if (studentName == null || studentName.isEmpty()) {
             Toast.makeText(this, "Student name can not be empty", Toast.LENGTH_SHORT).show();
             return;
@@ -202,16 +218,24 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             return;
         }
 
-        Student student = new Student(studentName, fatherName, address, mSelectedClass, classTeacher);
-        if (roundedBitmap != null) {
-            student.setImage(getBase64FromBitmap(roundedBitmap));
+        if (bitmap == null) {
+            Toast.makeText(this, "Student image can not be empty", Toast.LENGTH_SHORT).show();
+            return;
         }
-        Log.d(Constants.TAG, TAG+" Image : "+student.getImage());
+        Student student = new Student(studentName, fatherName, address, mSelectedClass, classTeacher);
+        if (bitmap != null) {
+            student.setImage(getBase64FromBitmap(bitmap));
+        }
+        Log.d(Constants.TAG, TAG + " Image : " + student.getImage());
+        Log.d(Constants.TAG, TAG + " Session : " + PreferenceManager.instance().getSession());
+        student.setSession(PreferenceManager.instance().getSession());
+        mAddProgressBar.setVisibility(View.VISIBLE);
         if (isUpdate && studentId != null) {
             student.set_id(studentId);
             studentViewModel.updateStudent(student).observe(this, new Observer<StudentResponse>() {
                 @Override
                 public void onChanged(StudentResponse response) {
+                    mAddProgressBar.setVisibility(View.INVISIBLE);
                     if (response != null) {
                         if (response.isSuccess()) {
                             Log.d(Constants.TAG, TAG + " Student updated successfully");
@@ -237,6 +261,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             studentViewModel.addStudent(student).observe(this, new Observer<StudentResponse>() {
                 @Override
                 public void onChanged(StudentResponse response) {
+                    mAddProgressBar.setVisibility(View.INVISIBLE);
                     if (response != null) {
                         if (response.isSuccess()) {
                             Log.d(Constants.TAG, TAG + " Student added successfully");
@@ -264,7 +289,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
     private String getBase64FromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return encoded;
     }
@@ -296,15 +321,15 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             public void onChanged(ClassTeacherResponse response) {
                 if (response != null) {
                     if (response.isSuccess()) {
-                        Log.d(Constants.TAG, TAG+" Get class teacher by class name success");
+                        Log.d(Constants.TAG, TAG + " Get class teacher by class name success");
                         if (response.getClassTeacherName() != null) {
                             editClassTeacher.setText(response.getClassTeacherName());
                         }
                     } else {
-                        Log.e(Constants.TAG, TAG+" getting class teacher by class name failed");
+                        Log.e(Constants.TAG, TAG + " getting class teacher by class name failed");
                     }
                 } else {
-                    Log.e(Constants.TAG, TAG+" Error in getting class teacher by class name");
+                    Log.e(Constants.TAG, TAG + " Error in getting class teacher by class name");
                 }
             }
         });

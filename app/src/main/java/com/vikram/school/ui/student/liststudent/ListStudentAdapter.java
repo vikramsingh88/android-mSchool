@@ -1,5 +1,7 @@
 package com.vikram.school.ui.student.liststudent;
 
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +12,17 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.vikram.school.R;
 import com.vikram.school.ui.student.Student;
 import com.vikram.school.utility.ColorGenerator;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.Utility;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.ListStudentHolder>{
     private String TAG = "ListStudentAdapter";
@@ -35,7 +42,9 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
         private TextView txtStudentClass;
         private TextView txtClassTeacher;
         private TextView txtDate;
+        private TextView txtSession;
         private CardView row;
+        private CircularImageView imageView;
 
         public ListStudentHolder(View view) {
             super(view);
@@ -45,7 +54,9 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
             txtStudentClass = (TextView) view.findViewById(R.id.txt_student_class);
             txtClassTeacher = (TextView) view.findViewById(R.id.txt_class_teacher);
             txtDate = (TextView) view.findViewById(R.id.txt_date);
+            txtSession = (TextView) view.findViewById(R.id.txt_session);
             row = (CardView) view.findViewById(R.id.row);
+            imageView = (CircularImageView) view.findViewById(R.id.img_profile);
         }
     }
 
@@ -79,7 +90,13 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
         holder.txtAddress.setText(student.getAddress());
         holder.txtStudentClass.setText(student.getStudentClass());
         holder.txtClassTeacher.setText(student.getClassTeacher());
-        holder.txtDate.setText(student.getDate());
+        holder.txtDate.setText(Utility.formatDate(student.getDate(), Utility.datePattern));
+        holder.txtSession.setText(student.getSession());
+        Log.d(Constants.TAG, TAG+" image data : "+student.getImage());
+        if(student.getImage() != null) {
+            byte[] imageAsBytes = Base64.decode(student.getImage(), Base64.DEFAULT);
+            holder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+        }
         holder.row.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 listener.onItemClick(student);

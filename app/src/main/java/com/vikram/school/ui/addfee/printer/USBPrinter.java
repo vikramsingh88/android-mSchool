@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.vikram.school.utility.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -27,24 +28,25 @@ public class USBPrinter {
     private UsbInterface mInterface;
     private UsbEndpoint mEndPoint;
     private PendingIntent mPermissionIntent;
-    EditText ed_txt;
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
     private static Boolean forceCLaim = true;
+    private IPrintStatus printStatus;
     private String TAG = "USBPrinter";
 
     HashMap<String, UsbDevice> mDeviceList;
     Iterator<UsbDevice> mDeviceIterator;
-    byte[] testBytes;
     String usbDevice = "";
     byte [] dataToPrint;
 
-    void initAndPrint(Context context, byte [] dataToPrint) {
+    public void initAndPrint(Context context, byte [] dataToPrint) {
         this.dataToPrint = dataToPrint;
+        this.printStatus = (IPrintStatus )context;
         mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         mDeviceList = mUsbManager.getDeviceList();
         if (mDeviceList != null && mDeviceList.size() > 0) {
             mDeviceIterator = mDeviceList.values().iterator();
             Log.d(Constants.TAG, TAG+" Device list : "+mDeviceList.size());
+            usbDevice = "";
             while (mDeviceIterator.hasNext()) {
                 UsbDevice usbDevice1 = mDeviceIterator.next();
                 usbDevice += "\n" +
@@ -71,26 +73,49 @@ public class USBPrinter {
             mUsbManager.requestPermission(mDevice, mPermissionIntent);
         } else {
             Toast.makeText(context, "Please attach printer via USB", Toast.LENGTH_SHORT).show();
+            if (printStatus != null) {
+                printStatus.printStatus(false);
+            }
         }
     }
 
+    public void onDestroy(Context context) {
+        try {
+            context.unregisterReceiver(mUsbReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        printStatus = null;
+    }
+
     private void print(Context  context) {
-        final String test = ed_txt.getText().toString() + "\n\n";
-        testBytes = test.getBytes();
         if (mInterface == null) {
             Toast.makeText(context, "INTERFACE IS NULL", Toast.LENGTH_SHORT).show();
+            if (printStatus != null) {
+                printStatus.printStatus(false);
+            }
         } else if (mConnection == null) {
             Toast.makeText(context, "CONNECTION IS NULL", Toast.LENGTH_SHORT).show();
+            if (printStatus != null) {
+                printStatus.printStatus(false);
+            }
         } else if (forceCLaim == null) {
             Toast.makeText(context, "FORCE CLAIM IS NULL", Toast.LENGTH_SHORT).show();
+            if (printStatus != null) {
+                printStatus.printStatus(false);
+            }
         } else {
             mConnection.claimInterface(mInterface, forceCLaim);
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     byte[] cut_paper = {0x1D, 0x56, 0x41, 0x10};
-                    mConnection.bulkTransfer(mEndPoint, usbDevice.getBytes(), testBytes.length, 0);
+                    Log.d(Constants.TAG, TAG+" Total bytes to print : "+dataToPrint.length);
+                    mConnection.bulkTransfer(mEndPoint, dataToPrint, dataToPrint.length, 0);
                     mConnection.bulkTransfer(mEndPoint, cut_paper, cut_paper.length, 0);
+                    if (printStatus != null) {
+                        printStatus.printStatus(true);
+                    }
                 }
             });
             thread.run();
@@ -101,7 +126,9 @@ public class USBPrinter {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.d(Constants.TAG, TAG+" action "+action);
             if (ACTION_USB_PERMISSION.equals(action)) {
+                Log.d(Constants.TAG, TAG+" Printer permission granted");
                 synchronized (this) {
                     UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
@@ -111,10 +138,19 @@ public class USBPrinter {
                             mEndPoint = mInterface.getEndpoint(1);// 0 IN and  1 OUT to printer.
                             mConnection = mUsbManager.openDevice(device);
                             //print
+                            Log.d(Constants.TAG, TAG+" Print function called");
                             print(context);
+                        } else {
+                            Log.d(Constants.TAG, TAG+" No printer device available");
+                            if (printStatus != null) {
+                                printStatus.printStatus(false);
+                            }
                         }
                     } else {
                         Toast.makeText(context, "PERMISSION DENIED FOR THIS DEVICE", Toast.LENGTH_SHORT).show();
+                        if (printStatus != null) {
+                            printStatus.printStatus(false);
+                        }
                     }
                 }
             }

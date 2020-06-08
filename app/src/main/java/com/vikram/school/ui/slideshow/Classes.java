@@ -7,6 +7,7 @@ public class Classes {
     private String classFees;
     private String classExamFees;
     private String date;
+    private String session;
 
     public Classes() {
     }
@@ -64,5 +65,13 @@ public class Classes {
 
     public void setClassExamFees(String classExamFees) {
         this.classExamFees = classExamFees;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }

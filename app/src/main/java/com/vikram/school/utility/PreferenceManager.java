@@ -44,5 +44,15 @@ public class PreferenceManager {
     public String getSavedPassword() {
         return mSharedPreferences.getString("password", null);
     }
+
+    public String getSession() {
+        return mSharedPreferences.getString("session", null);
+    }
+
+    public void saveSession(String session) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString("session", session);
+        editor.commit();
+    }
 }
 

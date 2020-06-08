@@ -43,8 +43,8 @@ public interface ISchoolAPI {
     @POST("update-student/")
     Call<StudentResponse> updateStudent(@Body Student student);
 
-    @GET("/student/{class}")
-    Call<ListStudentResponse> getStudentByClass(@Path("class") String className);
+    @GET("/student/{class}/{session}")
+    Call<ListStudentResponse> getStudentByClass(@Path("class") String className, @Path("session") String session);
 
     @Headers({
             "Content-Type: application/json",
@@ -53,8 +53,15 @@ public interface ISchoolAPI {
     @POST("student-fee/")
     Call<AddFeeResponse> addFee(@Body Fee fee);
 
-    @GET("/student-fee/{studentId}")
-    Call<ListFeesResponse> getStudentFeesByStudentId(@Path("studentId") String studentId);
+    @Headers({
+            "Content-Type: application/json",
+            "Accept-Charset: utf-8"
+    })
+    @POST("student-fee-update/")
+    Call<AddFeeResponse> updateFee(@Body Fee fee);
+
+    @GET("/student-fee/{studentId}/{session}")
+    Call<ListFeesResponse> getStudentFeesByStudentId(@Path("studentId") String studentId, @Path("session") String session);
 
     @Headers({
             "Content-Type: application/json",
@@ -70,12 +77,12 @@ public interface ISchoolAPI {
     @POST("update-class/")
     Call<ClassesResponse> updateClasses(@Body Classes classes);
 
-    @GET("classes/")
-    Call<ClassesListResponse> getClasses();
+    @GET("classes/{session}")
+    Call<ClassesListResponse> getClasses(@Path("session") String session);
 
-    @GET("classes/{className}")
-    Call<ClassTeacherResponse> getClassTeacherByClass(@Path("className") String className);
+    @GET("classes/{className}/{session}")
+    Call<ClassTeacherResponse> getClassTeacherByClass(@Path("className") String className, @Path("session") String session);
 
-    @GET("classes-class-exam-fees/{className}")
-    Call<ClassFeesResponse> getClassFeesByClass(@Path("className") String className);
+    @GET("classes-class-exam-fees/{className}/{session}")
+    Call<ClassFeesResponse> getClassFeesByClass(@Path("className") String className, @Path("session") String session);
 }

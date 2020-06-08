@@ -9,6 +9,7 @@ import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
 import com.vikram.school.ui.login.LoginResult;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,7 @@ public class StudentRepository {
             @Override
             public void onFailure(Call<StudentResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in adding student");
+                studentResult.setValue(null);
             }
         });
         return studentResult;
@@ -65,7 +67,7 @@ public class StudentRepository {
     public LiveData<ClassTeacherResponse> getClassTeacherByClass(String className) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassTeacherResponse> classTeacherResult = new MutableLiveData<ClassTeacherResponse>();
-        Call<ClassTeacherResponse> call = iSchoolAPI.getClassTeacherByClass(className);
+        Call<ClassTeacherResponse> call = iSchoolAPI.getClassTeacherByClass(className, PreferenceManager.instance().getSession());
         Log.d(Constants.TAG, TAG+" Try to get class teacher by class name");
         call.enqueue(new Callback<ClassTeacherResponse>() {
             @Override

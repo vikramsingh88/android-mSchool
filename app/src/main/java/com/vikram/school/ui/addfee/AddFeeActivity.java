@@ -13,19 +13,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vikram.school.R;
+import com.vikram.school.ui.addfee.printer.IPrintStatus;
+import com.vikram.school.ui.addfee.printer.PrinterFormatter;
+import com.vikram.school.ui.addfee.printer.USBPrinter;
 import com.vikram.school.ui.home.ClassFeesResponse;
 import com.vikram.school.ui.home.HomeViewModel;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, IPrintStatus {
     private String TAG = "AddFeeActivity";
     private EditText editStudentName;
     private Spinner spinnerFeeType;
@@ -39,10 +44,20 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
     private AddFeeViewModel addFeeViewModel;
     private HomeViewModel homeViewModel;
     private String studentName;
+    private String fatherName;
     private String studentId;
     private String studentClass;
     private String monthlyFee;
     private String examFee;
+    private ProgressBar mAddProgress;
+    private USBPrinter usbPrinter;
+    private String amount;
+    private String advance;
+    private String remaining;
+    private String session;
+    private String feesId;
+    private String type;
+    private boolean isUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +69,12 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         spinnerFeeType = (Spinner) findViewById(R.id.spinner_fee_type);
         editAmount = (EditText) findViewById(R.id.edit_amount);
         btnAddFee = (Button) findViewById(R.id.btn_add_fee);
-        picker=(DatePicker)findViewById(R.id.date);
+        picker = (DatePicker) findViewById(R.id.date);
         txtClassFees = (TextView) findViewById(R.id.txt_lbl_class_fees);
         txtClassExamFees = (TextView) findViewById(R.id.txt_lbl_class_exam_fees);
+        mAddProgress = findViewById(R.id.add_fee_progress);
+
+        usbPrinter = new USBPrinter();
 
         List<String> feesType = new ArrayList<>();
         feesType.add(Constants.monthly);
@@ -67,8 +85,22 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         Intent intent = getIntent();
         studentId = intent.getStringExtra("student_id");
         studentName = intent.getStringExtra("student_name");
+        fatherName = intent.getStringExtra("father_name");
         studentClass = intent.getStringExtra("student_class");
         editStudentName.setText(studentName);
+        //check if activity launched for fees update
+        isUpdate = intent.getBooleanExtra("is_update", false);
+        if (isUpdate) {
+            amount = intent.getStringExtra("amount");
+            advance = intent.getStringExtra("advance");
+            remaining = intent.getStringExtra("remaining");
+            session = intent.getStringExtra("session");
+            feesId = intent.getStringExtra("fees_id");
+            type = intent.getStringExtra("fees_type");
+            spinnerFeeType.setEnabled(false);
+            editAmount.setText(amount);
+            btnAddFee.setText(R.string.update_fees);
+        }
 
         spinnerFeeType.setOnItemSelectedListener(this);
 
@@ -85,25 +117,25 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
             public void onChanged(ClassFeesResponse response) {
                 if (response != null) {
                     if (response.isSuccess()) {
-                        Log.d(Constants.TAG, TAG+" Student fees get request success");
+                        Log.d(Constants.TAG, TAG + " Student fees get request success");
                         monthlyFee = response.getClassFees();
                         examFee = response.getClassExamFees();
-                        txtClassFees.setText(getString(R.string.class_fees)+ "  " +monthlyFee);
-                        txtClassExamFees.setText(getString(R.string.class_exam_fees)+"  "+examFee);
+                        txtClassFees.setText(getString(R.string.class_fees) + "  " + monthlyFee);
+                        txtClassExamFees.setText(getString(R.string.class_exam_fees) + "  " + examFee);
                     } else {
-                        Log.e(Constants.TAG, TAG+" getting student fees failed");
+                        Log.e(Constants.TAG, TAG + " getting student fees failed");
                     }
                 } else {
-                    Log.e(Constants.TAG, TAG+" Error in getting student fee");
+                    Log.e(Constants.TAG, TAG + " Error in getting student fee");
                 }
             }
         });
     }
 
-    private String getCurrentDate(){
-        StringBuilder builder=new StringBuilder();;
-        builder.append((picker.getMonth() + 1)+"/");//month is 0 based
-        builder.append(picker.getDayOfMonth()+"/");
+    private String getCurrentDate() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(picker.getDayOfMonth() + "/");
+        builder.append((picker.getMonth() + 1) + "/");//month is 0 based
         builder.append(picker.getYear());
         return builder.toString();
     }
@@ -112,6 +144,10 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.room_spinner_item, feesType);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFeeType.setAdapter(dataAdapter);
+        if (type != null) {
+            int spinnerPosition = dataAdapter.getPosition(type);
+            spinnerFeeType.setSelection(spinnerPosition);
+        }
     }
 
     @Override
@@ -125,10 +161,10 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void addFee() {
-        String studentName = editStudentName.getText().toString();
+        final String studentName = editStudentName.getText().toString();
         String amount = editAmount.getText().toString();
         selectedDate = getCurrentDate();
-        Log.d(Constants.TAG, TAG+" Selected Date :"+selectedDate);
+        Log.d(Constants.TAG, TAG + " Selected Date :" + selectedDate);
 
         if (studentName == null || studentName.isEmpty()) {
             Toast.makeText(this, "Student name can not be empty", Toast.LENGTH_SHORT).show();
@@ -161,13 +197,13 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
             double mFee = Double.parseDouble(monthlyFee);
             double eFee = Double.parseDouble(examFee);
             if (selectedFeeType.equalsIgnoreCase(Constants.monthly)) {
-                if(mFee > feesPaid) {
+                if (mFee > feesPaid) {
                     remainingFee = mFee - feesPaid;
                 } else {
                     advanceFee = feesPaid - mFee;
                 }
             } else if (selectedFeeType.equalsIgnoreCase(Constants.exam)) {
-                if(eFee > feesPaid) {
+                if (eFee > feesPaid) {
                     remainingFee = eFee - feesPaid;
                 } else {
                     advanceFee = feesPaid - eFee;
@@ -175,26 +211,78 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
             }
         }
         Fee fee = new Fee(studentId, selectedFeeType, amount, selectedDate, String.valueOf(remainingFee), String.valueOf(advanceFee));
-
-        addFeeViewModel.addFee(fee).observe(this, new Observer<AddFeeResponse>() {
-            @Override
-            public void onChanged(AddFeeResponse response) {
-                if (response != null) {
-                    if (response.isSuccess()) {
-                        Log.d(Constants.TAG, TAG+" Student fees added successfully");
-                        Toast.makeText(AddFeeActivity.this, "Student fees added successfully", Toast.LENGTH_SHORT).show();
-                        if (response.getFee() != null) {
-                            Log.d(Constants.TAG, TAG + " Added student fees id "+response.getFee().get_id());
+        Log.d(Constants.TAG, TAG + " Session : " + PreferenceManager.instance().getSession());
+        fee.setSession(PreferenceManager.instance().getSession());
+        mAddProgress.setVisibility(View.VISIBLE);
+        //update
+        if (isUpdate) {
+            fee.set_id(feesId);
+            addFeeViewModel.updateFee(fee).observe(this, new Observer<AddFeeResponse>() {
+                @Override
+                public void onChanged(AddFeeResponse response) {
+                    mAddProgress.setVisibility(View.INVISIBLE);
+                    if (response != null) {
+                        if (response.isSuccess()) {
+                            Log.d(Constants.TAG, TAG + " Student fees updated successfully");
+                            Toast.makeText(AddFeeActivity.this, "Student fees updated successfully", Toast.LENGTH_SHORT).show();
+                            if (response.getFee() != null) {
+                                Log.d(Constants.TAG, TAG + " Updated student fees id " + response.getFee().get_id());
+                                Log.d(Constants.TAG, TAG + " Printing receipt...");
+                                String formattedString = PrinterFormatter.format(response.getFee(), studentName, fatherName);
+                                Log.d(Constants.TAG, TAG + " Formatter String : " + formattedString);
+                                usbPrinter.initAndPrint(AddFeeActivity.this, formattedString.getBytes());
+                            }
+                        } else {
+                            Log.e(Constants.TAG, TAG + " Updating student fees failed");
+                            Toast.makeText(AddFeeActivity.this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
                         }
-                        finish();
                     } else {
-                        Log.e(Constants.TAG, TAG+" Adding student fees failed");
-                        Toast.makeText(AddFeeActivity.this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
+                        Log.e(Constants.TAG, TAG + " Error in updating student fee");
                     }
-                } else {
-                    Log.e(Constants.TAG, TAG+" Error in adding student fee");
                 }
-            }
-        });
+            });
+        } else {
+            //create new
+            addFeeViewModel.addFee(fee).observe(this, new Observer<AddFeeResponse>() {
+                @Override
+                public void onChanged(AddFeeResponse response) {
+                    mAddProgress.setVisibility(View.INVISIBLE);
+                    if (response != null) {
+                        if (response.isSuccess()) {
+                            Log.d(Constants.TAG, TAG + " Student fees added successfully");
+                            Toast.makeText(AddFeeActivity.this, "Student fees added successfully", Toast.LENGTH_SHORT).show();
+                            if (response.getFee() != null) {
+                                Log.d(Constants.TAG, TAG + " Added student fees id " + response.getFee().get_id());
+                                Log.d(Constants.TAG, TAG + " Printing receipt...");
+                                String formattedString = PrinterFormatter.format(response.getFee(), studentName, fatherName);
+                                Log.d(Constants.TAG, TAG + " Formatter String : " + formattedString);
+                                usbPrinter.initAndPrint(AddFeeActivity.this, formattedString.getBytes());
+                            }
+                        } else {
+                            Log.e(Constants.TAG, TAG + " Adding student fees failed");
+                            Toast.makeText(AddFeeActivity.this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.e(Constants.TAG, TAG + " Error in adding student fee");
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        usbPrinter.onDestroy(this);
+    }
+
+    @Override
+    public void printStatus(boolean isCompleted) {
+        if (isCompleted) {
+            Log.d(Constants.TAG, TAG + " Receipt printed");
+        } else {
+            Log.d(Constants.TAG, TAG + " Receipt printing failed");
+        }
+        finish();
     }
 }

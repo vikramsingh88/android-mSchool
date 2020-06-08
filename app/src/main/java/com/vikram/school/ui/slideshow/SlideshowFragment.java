@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.vikram.school.R;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 //add new class/update existing class
 public class SlideshowFragment extends AppCompatActivity {
@@ -29,6 +31,7 @@ public class SlideshowFragment extends AppCompatActivity {
     private EditText editClassFees;
     private EditText editClassExamFees;
     private Button btnAddClass;
+    private ProgressBar mAddProgressBar;
     private ClassesViewModel classViewModel;
     private String classId;
     private boolean isUpdate;
@@ -43,6 +46,7 @@ public class SlideshowFragment extends AppCompatActivity {
         editClassFees = (EditText) findViewById(R.id.edit_class_fees);
         editClassExamFees = (EditText) findViewById(R.id.edit_class_exam_fees);
         btnAddClass = (Button) findViewById(R.id.btn_add_class);
+        mAddProgressBar = findViewById(R.id.add_class_progress);
 
         btnAddClass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,12 +97,16 @@ public class SlideshowFragment extends AppCompatActivity {
         }
 
         Classes classes = new Classes(classTeacherName, className, classFees, classExamFees);
+        Log.d(Constants.TAG, TAG+" Session : "+PreferenceManager.instance().getSession());
+        classes.setSession(PreferenceManager.instance().getSession());
         //update
+        mAddProgressBar.setVisibility(View.VISIBLE);
         if (isUpdate && classId != null) {
             classes.set_id(classId);
             classViewModel.updateClasses(classes).observe(this, new Observer<ClassesResponse>() {
                 @Override
                 public void onChanged(ClassesResponse response) {
+                    mAddProgressBar.setVisibility(View.INVISIBLE);
                     if (response != null) {
                         if (response.isSuccess()) {
                             Log.d(Constants.TAG, TAG+" Class updated successfully");
@@ -122,6 +130,7 @@ public class SlideshowFragment extends AppCompatActivity {
             classViewModel.addClasses(classes).observe(this, new Observer<ClassesResponse>() {
                 @Override
                 public void onChanged(ClassesResponse response) {
+                    mAddProgressBar.setVisibility(View.INVISIBLE);
                     if (response != null) {
                         if (response.isSuccess()) {
                             Log.d(Constants.TAG, TAG+" Class added successfully");

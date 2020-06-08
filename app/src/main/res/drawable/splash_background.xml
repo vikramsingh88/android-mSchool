@@ -8,7 +8,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/k"
+        android:drawable="@drawable/logo"
         android:width="300dp"
         android:height="300dp"
         android:gravity="center_vertical|center_horizontal">

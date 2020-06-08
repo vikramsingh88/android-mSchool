@@ -9,8 +9,10 @@ public class Fee {
     private String advanceFee;
     private String month;
     private String date;
+    private String session;
 
-    public Fee(String studentId, String feeType, String amount, String month, String remainingFee, String advanceFee) {
+    public Fee(String studentId, String feeType, String amount, String month,
+               String remainingFee, String advanceFee) {
         this.studentId = studentId;
         this.feeType = feeType;
         this.amount = amount;
@@ -81,5 +83,13 @@ public class Fee {
 
     public void setAdvanceFee(String advanceFee) {
         this.advanceFee = advanceFee;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }

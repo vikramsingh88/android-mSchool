@@ -9,6 +9,7 @@ public class Student {
     private String studentClass;
     private String classTeacher;
     private String date;
+    private String session;
 
     public Student() {
     }
@@ -83,5 +84,13 @@ public class Student {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }

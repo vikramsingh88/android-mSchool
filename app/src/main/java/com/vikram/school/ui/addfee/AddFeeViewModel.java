@@ -12,4 +12,9 @@ public class AddFeeViewModel extends ViewModel {
         addFeeResult = addFeeRepository.addFee(fee);
         return addFeeResult;
     }
+
+    public LiveData<AddFeeResponse> updateFee(Fee fee) {
+        addFeeResult = addFeeRepository.updateFee(fee);
+        return addFeeResult;
+    }
 }

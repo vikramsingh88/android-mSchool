@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,7 +21,7 @@ public class ListFeesRepository {
     public LiveData<ListFeesResponse> getStudentFeesByStudentId(String studentId) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ListFeesResponse> listStudentFeesResult = new MutableLiveData<ListFeesResponse>();
-        Call<ListFeesResponse> call = iSchoolAPI.getStudentFeesByStudentId(studentId);
+        Call<ListFeesResponse> call = iSchoolAPI.getStudentFeesByStudentId(studentId, PreferenceManager.instance().getSession());
         Log.d(Constants.TAG, TAG+" Trying to get student fees by student id");
         call.enqueue(new Callback<ListFeesResponse>() {
             @Override

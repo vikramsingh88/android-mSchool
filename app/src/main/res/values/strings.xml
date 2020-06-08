@@ -43,4 +43,6 @@
     <string name="add_new_class">Add new class</string>
     <string name="classes">Classes</string>
     <string name="update_class">Update Class</string>
+    <string name="session">Session</string>
+    <string name="update_fees">Update Fees</string>
 </resources>

@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginActivity">
 
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,11 +53,27 @@
                 android:layout_marginTop="10dp"
                 android:inputType="textPassword" />
 
+            <TextView
+                android:id="@+id/txt_lbl_session"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_password"
+                android:layout_marginTop="10dp"
+                android:text="@string/session" />
+
+            <Spinner
+                android:id="@+id/spinner_session"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_lbl_session"
+                android:layout_marginTop="10dp"
+                android:prompt="@string/spinner_title" />
+
             <CheckBox
                 android:id="@+id/check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/edit_password"
+                android:layout_below="@+id/spinner_session"
                 android:layout_marginTop="10dp" />
 
             <Button

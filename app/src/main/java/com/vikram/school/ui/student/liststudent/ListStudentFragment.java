@@ -80,6 +80,7 @@ public class ListStudentFragment extends AppCompatActivity {
                                 Intent intent1 = new Intent(ListStudentFragment.this, ListFeesTableActivity.class);
                                 intent1.putExtra("student_id", student.get_id());
                                 intent1.putExtra("student_name", student.getStudentName());
+                                intent1.putExtra("father_name", student.getFatherName());
                                 intent1.putExtra("student_class", student.getStudentClass());
                                 intent1.putExtra("monthlyFee", monthlyFee);
                                 intent1.putExtra("examFee", examFee);

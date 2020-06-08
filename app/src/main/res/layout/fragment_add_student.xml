@@ -3,7 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.student.AddStudentFragment">
+
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/add_student_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,18 +25,35 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp">
 
-            <ImageView
-                android:id="@+id/img_student"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_avatar" />
+            <RelativeLayout
+                android:id="@+id/rel_img"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/img_student"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_account_circle_black" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/img_plus"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignBottom="@id/img_student"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_plus"
+                    app:civ_shadow="true"
+                    app:civ_shadow_radius="1" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/txt_lbl_student_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/img_student"
+                android:layout_below="@+id/rel_img"
                 android:layout_marginTop="10dp"
                 android:text="@string/student_name" />
 

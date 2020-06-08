@@ -37,4 +37,25 @@ public class AddFeeRepository {
         });
         return addFeeResult;
     }
+
+    public LiveData<AddFeeResponse> updateFee(Fee fee) {
+        iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
+        final MutableLiveData<AddFeeResponse> updateFeeResult = new MutableLiveData<AddFeeResponse>();
+        Call<AddFeeResponse> call = iSchoolAPI.updateFee(fee);
+        Log.d(Constants.TAG, TAG+" Try to update student fee");
+        call.enqueue(new Callback<AddFeeResponse>() {
+            @Override
+            public void onResponse(Call<AddFeeResponse> call, Response<AddFeeResponse> response) {
+                Log.d(Constants.TAG, TAG+" update student fee request success");
+                AddFeeResponse tempResult = response.body();
+                updateFeeResult.setValue(tempResult);
+            }
+
+            @Override
+            public void onFailure(Call<AddFeeResponse> call, Throwable t) {
+                Log.e(Constants.TAG, TAG+" Error in updating student fee");
+            }
+        });
+        return updateFeeResult;
+    }
 }

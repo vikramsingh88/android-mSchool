@@ -9,6 +9,7 @@ import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
 import com.vikram.school.ui.student.StudentResponse;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +22,7 @@ public class ListStudentRepository {
     public LiveData<ListStudentResponse> getStudentByClass(String className) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ListStudentResponse> listStudentResult = new MutableLiveData<ListStudentResponse>();
-        Call<ListStudentResponse> call = iSchoolAPI.getStudentByClass(className);
+        Call<ListStudentResponse> call = iSchoolAPI.getStudentByClass(className, PreferenceManager.instance().getSession());
         Log.d(Constants.TAG, TAG+" Trying to get students by classes");
         call.enqueue(new Callback<ListStudentResponse>() {
             @Override
