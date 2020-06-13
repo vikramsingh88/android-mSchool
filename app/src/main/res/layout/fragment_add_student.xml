@@ -95,10 +95,34 @@
                 android:layout_marginTop="10dp" />
 
             <TextView
-                android:id="@+id/txt_lbl_class"
+                android:id="@+id/txt_lbl_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/edit_address"
+                android:layout_marginTop="10dp"
+                android:text="@string/mobile" />
+
+            <EditText
+                android:id="@+id/edit_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:layout_below="@+id/txt_lbl_mobile"
+                android:layout_marginTop="10dp" />
+
+            <CheckBox
+                android:id="@+id/ckb_transport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_mobile"
+                android:text="@string/transport"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/txt_lbl_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ckb_transport"
                 android:layout_marginTop="10dp"
                 android:text="@string/student_class" />
 
@@ -107,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_lbl_class"
+                android:layout_marginTop="10dp"
                 android:prompt="@string/spinner_title" />
 
             <TextView

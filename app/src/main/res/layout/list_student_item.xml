@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/row"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="200dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
@@ -81,21 +81,47 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rel_address"
+            android:id="@+id/rel_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txt_lbl__address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/address"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/txt_lbl__address"
+                    android:id="@+id/txt_lbl__mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="@string/address"
+                    android:text="@string/mobile2"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/txt_address"
+                    android:id="@+id/txt_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -200,6 +226,32 @@
 
                 <TextView
                     android:id="@+id/txt_session"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_transport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_lbl__transport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/transport"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/txt_transport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

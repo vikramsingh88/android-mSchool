@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +22,7 @@ public class ClassRepository {
     public LiveData<ClassesResponse> addClasses(Classes classes) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassesResponse> classesResult = new MutableLiveData<ClassesResponse>();
-        Call<ClassesResponse> call = iSchoolAPI.addClasses(classes);
+        Call<ClassesResponse> call = iSchoolAPI.addClasses(classes, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to add classes");
         call.enqueue(new Callback<ClassesResponse>() {
             @Override
@@ -43,7 +44,7 @@ public class ClassRepository {
     public LiveData<ClassesResponse> updateClasses(Classes classes) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassesResponse> classesResult = new MutableLiveData<ClassesResponse>();
-        Call<ClassesResponse> call = iSchoolAPI.updateClasses(classes);
+        Call<ClassesResponse> call = iSchoolAPI.updateClasses(classes, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to update classes");
         call.enqueue(new Callback<ClassesResponse>() {
             @Override

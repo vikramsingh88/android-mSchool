@@ -33,6 +33,7 @@ public class LoginRepository {
             @Override
             public void onFailure(Call<LoginResult> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in authenticating user");
+                loginResult.setValue(null);
             }
         });
         return loginResult;

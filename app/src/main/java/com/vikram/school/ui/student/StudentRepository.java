@@ -22,7 +22,7 @@ public class StudentRepository {
     public LiveData<StudentResponse> addStudent(Student student) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<StudentResponse> studentResult = new MutableLiveData<StudentResponse>();
-        Call<StudentResponse> call = iSchoolAPI.addStudent(student);
+        Call<StudentResponse> call = iSchoolAPI.addStudent(student, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to add student");
         call.enqueue(new Callback<StudentResponse>() {
             @Override
@@ -45,7 +45,7 @@ public class StudentRepository {
     public LiveData<StudentResponse> updateStudent(Student student) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<StudentResponse> studentResult = new MutableLiveData<StudentResponse>();
-        Call<StudentResponse> call = iSchoolAPI.updateStudent(student);
+        Call<StudentResponse> call = iSchoolAPI.updateStudent(student, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to update student");
         call.enqueue(new Callback<StudentResponse>() {
             @Override
@@ -58,6 +58,7 @@ public class StudentRepository {
             @Override
             public void onFailure(Call<StudentResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in updating student");
+                studentResult.setValue(null);
             }
         });
         return studentResult;
@@ -67,7 +68,7 @@ public class StudentRepository {
     public LiveData<ClassTeacherResponse> getClassTeacherByClass(String className) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassTeacherResponse> classTeacherResult = new MutableLiveData<ClassTeacherResponse>();
-        Call<ClassTeacherResponse> call = iSchoolAPI.getClassTeacherByClass(className, PreferenceManager.instance().getSession());
+        Call<ClassTeacherResponse> call = iSchoolAPI.getClassTeacherByClass(className, PreferenceManager.instance().getSession(), PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to get class teacher by class name");
         call.enqueue(new Callback<ClassTeacherResponse>() {
             @Override

@@ -45,6 +45,8 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
         private TextView txtSession;
         private CardView row;
         private CircularImageView imageView;
+        private TextView txtMobile;
+        private TextView txtTransport;
 
         public ListStudentHolder(View view) {
             super(view);
@@ -57,6 +59,8 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
             txtSession = (TextView) view.findViewById(R.id.txt_session);
             row = (CardView) view.findViewById(R.id.row);
             imageView = (CircularImageView) view.findViewById(R.id.img_profile);
+            txtMobile = (TextView) view.findViewById(R.id.txt_mobile);
+            txtTransport = (TextView) view.findViewById(R.id.txt_transport);
         }
     }
 
@@ -92,6 +96,16 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
         holder.txtClassTeacher.setText(student.getClassTeacher());
         holder.txtDate.setText(Utility.formatDate(student.getDate(), Utility.datePattern));
         holder.txtSession.setText(student.getSession());
+        if (student.getMobile() == null || student.getMobile().isEmpty()) {
+            holder.txtMobile.setText("Not available");
+        } else {
+            holder.txtMobile.setText(student.getMobile());
+        }
+        if (student.isTransport()) {
+            holder.txtTransport.setText("Yes");
+        } else {
+            holder.txtTransport.setText("No");
+        }
         Log.d(Constants.TAG, TAG+" image data : "+student.getImage());
         if(student.getImage() != null) {
             byte[] imageAsBytes = Base64.decode(student.getImage(), Base64.DEFAULT);

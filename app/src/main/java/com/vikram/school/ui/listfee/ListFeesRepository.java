@@ -21,7 +21,7 @@ public class ListFeesRepository {
     public LiveData<ListFeesResponse> getStudentFeesByStudentId(String studentId) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ListFeesResponse> listStudentFeesResult = new MutableLiveData<ListFeesResponse>();
-        Call<ListFeesResponse> call = iSchoolAPI.getStudentFeesByStudentId(studentId, PreferenceManager.instance().getSession());
+        Call<ListFeesResponse> call = iSchoolAPI.getStudentFeesByStudentId(studentId, PreferenceManager.instance().getSession(), PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Trying to get student fees by student id");
         call.enqueue(new Callback<ListFeesResponse>() {
             @Override

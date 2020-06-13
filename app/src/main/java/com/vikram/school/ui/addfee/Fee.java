@@ -10,6 +10,8 @@ public class Fee {
     private String month;
     private String date;
     private String session;
+    private String mobile;
+    private String name;
 
     public Fee(String studentId, String feeType, String amount, String month,
                String remainingFee, String advanceFee) {
@@ -91,5 +93,21 @@ public class Fee {
 
     public void setSession(String session) {
         this.session = session;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

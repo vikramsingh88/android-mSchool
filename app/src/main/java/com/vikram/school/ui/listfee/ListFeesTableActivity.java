@@ -37,6 +37,8 @@ public class ListFeesTableActivity extends AppCompatActivity implements IPrintSt
     private String studentClass;
     private String monthlyFee;
     private String examFee;
+    private String mobile;
+    private boolean isTransport;
     private USBPrinter usbPrinter;
 
     @Override
@@ -53,6 +55,8 @@ public class ListFeesTableActivity extends AppCompatActivity implements IPrintSt
         studentClass = intent.getStringExtra("student_class");
         monthlyFee = intent.getStringExtra("monthlyFee");
         examFee = intent.getStringExtra("examFee");
+        mobile = intent.getStringExtra("mobile");
+        isTransport = intent.getBooleanExtra("transport", false);
         setTitle(studentName + " Total fees so far Rs. ");
 
         usbPrinter = new USBPrinter();
@@ -66,6 +70,7 @@ public class ListFeesTableActivity extends AppCompatActivity implements IPrintSt
                 intent1.putExtra("student_name", studentName);
                 intent1.putExtra("student_class", studentClass);
                 intent1.putExtra("father_name", fatherName);
+                intent1.putExtra("mobile", mobile);
                 startActivity(intent1);
             }
         });
@@ -158,6 +163,7 @@ public class ListFeesTableActivity extends AppCompatActivity implements IPrintSt
                                     intent1.putExtra("fees_id", selectedFee.get_id());
                                     intent1.putExtra("fees_type", selectedFee.getFeeType());
                                     intent1.putExtra("is_update", true);
+                                    intent1.putExtra("mobile", mobile);
 
                                     startActivity(intent1);
                                     return false;

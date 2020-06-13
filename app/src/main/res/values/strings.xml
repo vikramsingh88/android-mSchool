@@ -45,4 +45,10 @@
     <string name="update_class">Update Class</string>
     <string name="session">Session</string>
     <string name="update_fees">Update Fees</string>
+    <string name="mobile">Mobile- enter without country code</string>
+    <string name="mobile2">Mobile</string>
+    <string name="message">Message</string>
+    <string name="send">Send</string>
+    <string name="send_broadcast">Send message</string>
+    <string name="transport">Transport</string>
 </resources>

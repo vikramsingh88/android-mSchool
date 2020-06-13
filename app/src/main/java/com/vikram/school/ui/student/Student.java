@@ -10,16 +10,19 @@ public class Student {
     private String classTeacher;
     private String date;
     private String session;
+    private String mobile;
+    private boolean transport;
 
     public Student() {
     }
 
-    public Student(String studentName, String fatherName, String address, String studentClass, String classTeacher) {
+    public Student(String studentName, String fatherName, String address, String studentClass, String classTeacher, String mobile) {
         this.studentName = studentName;
         this.fatherName = fatherName;
         this.address = address;
         this.studentClass = studentClass;
         this.classTeacher = classTeacher;
+        this.mobile = mobile;
     }
 
     public String get_id() {
@@ -92,5 +95,21 @@ public class Student {
 
     public void setSession(String session) {
         this.session = session;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public boolean isTransport() {
+        return transport;
+    }
+
+    public void setTransport(boolean transport) {
+        this.transport = transport;
     }
 }

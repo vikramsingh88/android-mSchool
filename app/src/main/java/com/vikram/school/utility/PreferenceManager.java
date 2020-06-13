@@ -54,5 +54,15 @@ public class PreferenceManager {
         editor.putString("session", session);
         editor.commit();
     }
+
+    public String getToken() {
+        return mSharedPreferences.getString("token", null);
+    }
+
+    public void saveToken(String token) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString("token", token);
+        editor.commit();
+    }
 }
 

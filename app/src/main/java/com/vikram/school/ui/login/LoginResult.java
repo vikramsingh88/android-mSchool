@@ -1,22 +1,40 @@
 package com.vikram.school.ui.login;
 
 public class LoginResult {
-    private String userName;
-    private boolean isSuccess;
+    private String message;
+    private String token;
+    private User user;
+    private boolean success;
 
-    public String getUserName() {
-        return userName;
+    public String getMessage() {
+        return message;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean isSuccess() {
-        return isSuccess;
+        return success;
     }
 
     public void setSuccess(boolean success) {
-        isSuccess = success;
+        this.success = success;
     }
 }

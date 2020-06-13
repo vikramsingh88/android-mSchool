@@ -19,6 +19,8 @@ public class PrinterFormatter {
                 "Date time : " + Utility.formatDate(fee.getDate(), Utility.datePattern) + "\n" +
                 "***********Thank you***********" + "\n"
                 + "\n"
+                + "\n"
+                + "\n"
                 + "\n" ;
 
         return formattedString;

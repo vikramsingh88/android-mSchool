@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             return;
         }
         Log.d(Constants.TAG, TAG+" user name : "+userName);
-        Log.d(Constants.TAG, TAG+" password : "+password);
+        //Log.d(Constants.TAG, TAG+" password : "+password);
         mLoginProgress.setVisibility(View.VISIBLE);
         loginViewModel.login(new User(userName, password)).observe(this, new Observer<LoginResult>() {
             @Override
@@ -121,7 +121,9 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                     if (loginResult.isSuccess()) {
                         preferences.saveLoginPreference(userName, password);
                         Log.d(Constants.TAG, TAG+" selectedSession : "+selectedSession);
+                        Log.d(Constants.TAG, TAG+" token : "+loginResult.getToken());
                         preferences.saveSession(selectedSession);
+                        preferences.saveToken(loginResult.getToken());
                         Intent intent = new Intent(LoginActivity.this, HomeFragment.class);
                         startActivity(intent);
                         finish();
@@ -130,6 +132,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                     }
                 } else {
                     Log.d(Constants.TAG, TAG+" Server error during login");
+                    Toast.makeText(LoginActivity.this, "Server error during login", Toast.LENGTH_SHORT).show();
                 }
             }
         });

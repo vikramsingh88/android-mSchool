@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".ui.message.MessageUIActivity"
+            android:label="@string/send_broadcast"></activity>
         <activity android:name=".ui.listfee.ListFeesActivity" />
         <activity android:name=".ui.listfee.ListFeesTableActivity" />
         <activity
@@ -54,16 +55,12 @@
 
         <meta-data
             android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-            android:resource="@xml/device_filter" />
-
-        <!-- uCrop cropping activity -->
+            android:resource="@xml/device_filter" /> <!-- uCrop cropping activity -->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".utility.ImagePickerActivity" />
-
-        <!-- cache directory file provider paths -->
+        <activity android:name=".utility.ImagePickerActivity" /> <!-- cache directory file provider paths -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

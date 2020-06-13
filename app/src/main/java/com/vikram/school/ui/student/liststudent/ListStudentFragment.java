@@ -84,6 +84,8 @@ public class ListStudentFragment extends AppCompatActivity {
                                 intent1.putExtra("student_class", student.getStudentClass());
                                 intent1.putExtra("monthlyFee", monthlyFee);
                                 intent1.putExtra("examFee", examFee);
+                                intent1.putExtra("mobile", student.getMobile());
+                                intent1.putExtra("transport", student.isTransport());
                                 startActivity(intent1);
                             }
 
@@ -98,7 +100,10 @@ public class ListStudentFragment extends AppCompatActivity {
                                 intent1.putExtra("class_teacher", student.getClassTeacher());
                                 intent1.putExtra("monthlyFee", monthlyFee);
                                 intent1.putExtra("examFee", examFee);
+                                intent1.putExtra("image", student.getImage());
                                 intent1.putExtra("is_update", true);
+                                intent1.putExtra("mobile", student.getMobile());
+                                intent1.putExtra("transport", student.isTransport());
                                 startActivity(intent1);
                             }
                         });

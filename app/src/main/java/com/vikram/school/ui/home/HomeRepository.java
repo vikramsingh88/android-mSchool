@@ -21,7 +21,7 @@ public class HomeRepository {
     public LiveData<ClassesListResponse> getClasses() {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassesListResponse> classResult = new MutableLiveData<ClassesListResponse>();
-        Call<ClassesListResponse> call = iSchoolAPI.getClasses(PreferenceManager.instance().getSession());
+        Call<ClassesListResponse> call = iSchoolAPI.getClasses(PreferenceManager.instance().getSession(), PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to get list of classes");
         call.enqueue(new Callback<ClassesListResponse>() {
             @Override
@@ -34,6 +34,7 @@ public class HomeRepository {
             @Override
             public void onFailure(Call<ClassesListResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in getting list of classes");
+                classResult.setValue(null);
             }
         });
         return classResult;
@@ -43,7 +44,7 @@ public class HomeRepository {
     public LiveData<ClassFeesResponse> getClassFeesByClass(String className) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ClassFeesResponse> classResult = new MutableLiveData<ClassFeesResponse>();
-        Call<ClassFeesResponse> call = iSchoolAPI.getClassFeesByClass(className, PreferenceManager.instance().getSession());
+        Call<ClassFeesResponse> call = iSchoolAPI.getClassFeesByClass(className, PreferenceManager.instance().getSession(), PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to get class fees by class name");
         call.enqueue(new Callback<ClassFeesResponse>() {
             @Override

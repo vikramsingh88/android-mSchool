@@ -58,6 +58,7 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
     private String feesId;
     private String type;
     private boolean isUpdate;
+    private String mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +81,14 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         feesType.add(Constants.monthly);
         feesType.add(Constants.exam);
         feesType.add(Constants.advance);
-        updateFeesTypeSpinner(feesType);
+        feesType.add(Constants.transport);
 
         Intent intent = getIntent();
         studentId = intent.getStringExtra("student_id");
         studentName = intent.getStringExtra("student_name");
         fatherName = intent.getStringExtra("father_name");
         studentClass = intent.getStringExtra("student_class");
+        mobile = intent.getStringExtra("mobile");
         editStudentName.setText(studentName);
         //check if activity launched for fees update
         isUpdate = intent.getBooleanExtra("is_update", false);
@@ -103,6 +105,8 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         }
 
         spinnerFeeType.setOnItemSelectedListener(this);
+
+        updateFeesTypeSpinner(feesType);
 
         btnAddFee.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,6 +217,10 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
         Fee fee = new Fee(studentId, selectedFeeType, amount, selectedDate, String.valueOf(remainingFee), String.valueOf(advanceFee));
         Log.d(Constants.TAG, TAG + " Session : " + PreferenceManager.instance().getSession());
         fee.setSession(PreferenceManager.instance().getSession());
+        if (mobile != null) {
+            fee.setMobile(mobile);
+        }
+        fee.setName(studentName);
         mAddProgress.setVisibility(View.VISIBLE);
         //update
         if (isUpdate) {
@@ -238,6 +246,7 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
                         }
                     } else {
                         Log.e(Constants.TAG, TAG + " Error in updating student fee");
+                        Toast.makeText(AddFeeActivity.this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -264,6 +273,7 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
                         }
                     } else {
                         Log.e(Constants.TAG, TAG + " Error in adding student fee");
+                        Toast.makeText(AddFeeActivity.this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

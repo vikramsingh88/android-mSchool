@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
 import com.vikram.school.utility.Constants;
+import com.vikram.school.utility.PreferenceManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,7 +21,7 @@ public class AddFeeRepository {
     public LiveData<AddFeeResponse> addFee(Fee fee) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<AddFeeResponse> addFeeResult = new MutableLiveData<AddFeeResponse>();
-        Call<AddFeeResponse> call = iSchoolAPI.addFee(fee);
+        Call<AddFeeResponse> call = iSchoolAPI.addFee(fee, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to add student fee");
         call.enqueue(new Callback<AddFeeResponse>() {
             @Override
@@ -33,6 +34,7 @@ public class AddFeeRepository {
             @Override
             public void onFailure(Call<AddFeeResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in adding student fee");
+                addFeeResult.setValue(null);
             }
         });
         return addFeeResult;
@@ -41,7 +43,7 @@ public class AddFeeRepository {
     public LiveData<AddFeeResponse> updateFee(Fee fee) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<AddFeeResponse> updateFeeResult = new MutableLiveData<AddFeeResponse>();
-        Call<AddFeeResponse> call = iSchoolAPI.updateFee(fee);
+        Call<AddFeeResponse> call = iSchoolAPI.updateFee(fee, PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Try to update student fee");
         call.enqueue(new Callback<AddFeeResponse>() {
             @Override
@@ -54,6 +56,7 @@ public class AddFeeRepository {
             @Override
             public void onFailure(Call<AddFeeResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in updating student fee");
+                updateFeeResult.setValue(null);
             }
         });
         return updateFeeResult;

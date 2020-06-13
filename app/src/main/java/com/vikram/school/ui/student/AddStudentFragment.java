@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,6 +61,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
     private EditText editStudentName;
     private EditText editFatherName;
     private EditText editAddress;
+    private EditText editMobile;
     private EditText editClassTeacher;
     private CircularImageView imgProfile;
     private Button btnAddStudent;
@@ -71,6 +74,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
     private String studentId;
     private ProgressBar mAddProgressBar;
     private Bitmap bitmap;
+    private CheckBox chkTransport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,8 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
         imgProfile = (CircularImageView) findViewById(R.id.img_student);
         spinner.setOnItemSelectedListener(this);
         mAddProgressBar = findViewById(R.id.add_student_progress);
+        editMobile = findViewById(R.id.edit_mobile);
+        chkTransport = findViewById(R.id.ckb_transport);
 
         Intent intent = getIntent();
         selectedClass = intent.getStringExtra("student_class");
@@ -97,10 +103,17 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             editStudentName.setText(intent.getStringExtra("student_name"));
             editFatherName.setText(intent.getStringExtra("father_name"));
             editAddress.setText(intent.getStringExtra("address"));
+            editMobile.setText(intent.getStringExtra("mobile"));
+            chkTransport.setChecked(intent.getBooleanExtra("transport", false));
             spinner.setEnabled(false);
             editClassTeacher.setText(intent.getStringExtra("class_teacher"));
             btnAddStudent.setText(R.string.update_student);
             setTitle(R.string.update_student);
+            if(intent.getStringExtra("image") != null) {
+                byte[] imageAsBytes = Base64.decode(intent.getStringExtra("image"), Base64.DEFAULT);
+                bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+                imgProfile.setImageBitmap(bitmap);
+            }
         }
 
         homeViewModel.getClasses().observe(this, new Observer<ClassesListResponse>() {
@@ -192,6 +205,8 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
         String fatherName = editFatherName.getText().toString();
         String address = editAddress.getText().toString();
         String classTeacher = editClassTeacher.getText().toString();
+        String mobile = editMobile.getText().toString();
+        boolean isTransport = chkTransport.isChecked();
 
         if (studentName == null || studentName.isEmpty()) {
             Toast.makeText(this, "Student name can not be empty", Toast.LENGTH_SHORT).show();
@@ -222,13 +237,22 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             Toast.makeText(this, "Student image can not be empty", Toast.LENGTH_SHORT).show();
             return;
         }
-        Student student = new Student(studentName, fatherName, address, mSelectedClass, classTeacher);
+        //mobile number validation
+        if(mobile != null && !mobile.isEmpty()) {
+            if (mobile.startsWith("+91")) {
+                Toast.makeText(this, "Remove country code from mobile number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mobile = "+91"+mobile;
+        }
+        Student student = new Student(studentName, fatherName, address, mSelectedClass, classTeacher, mobile);
         if (bitmap != null) {
             student.setImage(getBase64FromBitmap(bitmap));
         }
-        Log.d(Constants.TAG, TAG + " Image : " + student.getImage());
+        //Log.d(Constants.TAG, TAG + " Image : " + student.getImage());
         Log.d(Constants.TAG, TAG + " Session : " + PreferenceManager.instance().getSession());
         student.setSession(PreferenceManager.instance().getSession());
+        student.setTransport(isTransport);
         mAddProgressBar.setVisibility(View.VISIBLE);
         if (isUpdate && studentId != null) {
             student.set_id(studentId);

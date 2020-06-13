@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vikram.school.R;
+import com.vikram.school.ui.message.MessageUIActivity;
 import com.vikram.school.ui.slideshow.Classes;
 import com.vikram.school.ui.slideshow.SlideshowFragment;
 import com.vikram.school.ui.student.liststudent.ListStudentFragment;
@@ -68,6 +72,26 @@ public class HomeFragment extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_send:
+                Intent intent = new Intent(this, MessageUIActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void updateClassesList(ClassesListResponse classes) {
         if(classes != null) {
             if (classes.isSuccess()) {
@@ -101,6 +125,7 @@ public class HomeFragment extends AppCompatActivity {
             }
         } else {
             Log.d(Constants.TAG, TAG+" Error in getting classes");
+            Toast.makeText(HomeFragment.this, "Error in getting classes", Toast.LENGTH_SHORT).show();
         }
     }
 }

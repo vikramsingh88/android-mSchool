@@ -22,7 +22,7 @@ public class ListStudentRepository {
     public LiveData<ListStudentResponse> getStudentByClass(String className) {
         iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
         final MutableLiveData<ListStudentResponse> listStudentResult = new MutableLiveData<ListStudentResponse>();
-        Call<ListStudentResponse> call = iSchoolAPI.getStudentByClass(className, PreferenceManager.instance().getSession());
+        Call<ListStudentResponse> call = iSchoolAPI.getStudentByClass(className, PreferenceManager.instance().getSession(), PreferenceManager.instance().getToken());
         Log.d(Constants.TAG, TAG+" Trying to get students by classes");
         call.enqueue(new Callback<ListStudentResponse>() {
             @Override
