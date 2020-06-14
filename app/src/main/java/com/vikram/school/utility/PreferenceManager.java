@@ -64,5 +64,31 @@ public class PreferenceManager {
         editor.putString("token", token);
         editor.commit();
     }
+
+    public boolean isAdmin() {
+        String str = mSharedPreferences.getString("isAdmin", "No");
+        if (str.equalsIgnoreCase("Yes")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void saveAdmin(String isAdmin) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString("isAdmin", isAdmin);
+        editor.commit();
+    }
+
+    public String getUsername() {
+        String str = mSharedPreferences.getString("username", null);
+        return str;
+    }
+
+    public void saveUsername(String username) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString("username", username);
+        editor.commit();
+    }
 }
 

@@ -125,6 +125,7 @@ public class MessageUIActivity extends AppCompatActivity implements AdapterView.
         //add school name in message
         message = message+"\nSMT Rooprani Vidya Mandir Lilambarpur Fatehpur";
         Message msgObject = new Message(message, mSelectedClass, PreferenceManager.instance().getSession());
+        msgObject.setCreatedBy(PreferenceManager.instance().getSavedUserName());
         mProgressBar.setVisibility(View.VISIBLE);
         messageViewModel.sendMessage(msgObject).observe(this, new Observer<MessageResponse>() {
             @Override

@@ -12,6 +12,7 @@ public class Student {
     private String session;
     private String mobile;
     private boolean transport;
+    private String createdBy;
 
     public Student() {
     }
@@ -111,5 +112,13 @@ public class Student {
 
     public void setTransport(boolean transport) {
         this.transport = transport;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

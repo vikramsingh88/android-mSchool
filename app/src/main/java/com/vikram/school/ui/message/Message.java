@@ -7,6 +7,7 @@ public class Message {
     private String stdClass;
     private String session;
     private Date date;
+    private String createdBy;
 
     public Message(String message, String stdClass, String session) {
         this.message = message;
@@ -44,5 +45,13 @@ public class Message {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

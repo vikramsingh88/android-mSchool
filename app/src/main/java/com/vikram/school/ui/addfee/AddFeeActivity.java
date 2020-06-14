@@ -193,6 +193,11 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
             Toast.makeText(this, "Unknown error, please try again!", Toast.LENGTH_SHORT).show();
             return;
         }
+        // check if logged in user is admin
+        if (!PreferenceManager.instance().isAdmin()) {
+            Toast.makeText(this, "You are not authorized to add fees", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //calculate advance and remaining fee
         double advanceFee = 0;
         double remainingFee = 0;
@@ -252,6 +257,7 @@ public class AddFeeActivity extends AppCompatActivity implements AdapterView.OnI
             });
         } else {
             //create new
+            fee.setCreatedBy(PreferenceManager.instance().getSavedUserName());
             addFeeViewModel.addFee(fee).observe(this, new Observer<AddFeeResponse>() {
                 @Override
                 public void onChanged(AddFeeResponse response) {

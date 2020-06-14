@@ -8,6 +8,7 @@ public class Classes {
     private String classExamFees;
     private String date;
     private String session;
+    private String createdBy;
 
     public Classes() {
     }
@@ -73,5 +74,13 @@ public class Classes {
 
     public void setSession(String session) {
         this.session = session;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

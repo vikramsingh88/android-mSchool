@@ -285,6 +285,8 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
                 }
             });
         } else {
+            //add student
+            student.setCreatedBy(PreferenceManager.instance().getSavedUserName());
             studentViewModel.addStudent(student).observe(this, new Observer<StudentResponse>() {
                 @Override
                 public void onChanged(StudentResponse response) {

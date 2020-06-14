@@ -127,6 +127,7 @@ public class SlideshowFragment extends AppCompatActivity {
                 }
             });
         } else { //add new
+            classes.setCreatedBy(PreferenceManager.instance().getSavedUserName());
             classViewModel.addClasses(classes).observe(this, new Observer<ClassesResponse>() {
                 @Override
                 public void onChanged(ClassesResponse response) {

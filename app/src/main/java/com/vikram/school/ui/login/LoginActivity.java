@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                         Log.d(Constants.TAG, TAG+" token : "+loginResult.getToken());
                         preferences.saveSession(selectedSession);
                         preferences.saveToken(loginResult.getToken());
+                        preferences.saveAdmin(loginResult.getUser().getAdmin());
                         Intent intent = new Intent(LoginActivity.this, HomeFragment.class);
                         startActivity(intent);
                         finish();

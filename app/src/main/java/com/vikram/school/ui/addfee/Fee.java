@@ -12,6 +12,7 @@ public class Fee {
     private String session;
     private String mobile;
     private String name;
+    private String createdBy;
 
     public Fee(String studentId, String feeType, String amount, String month,
                String remainingFee, String advanceFee) {
@@ -109,5 +110,13 @@ public class Fee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
