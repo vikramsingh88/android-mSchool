@@ -9,8 +9,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vikram.school.R;
@@ -31,6 +35,7 @@ public class ListStudentFragment extends AppCompatActivity {
     private String monthlyFee;
     private String examFee;
     private RecyclerView mRecyclerView;
+    private EditText editSearch;
     private ListStudentAdapter listStudentAdapter;
 
     @Override
@@ -38,6 +43,7 @@ public class ListStudentFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_list_student);
         mRecyclerView = (RecyclerView) findViewById(R.id.list_students);
+        editSearch = findViewById(R.id.edt_search);
         final Intent intent = getIntent();
         selectedClass = intent.getStringExtra("selectedClass");
         monthlyFee = intent.getStringExtra("monthlyFee");
@@ -60,6 +66,25 @@ public class ListStudentFragment extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (listStudentAdapter != null) {
+                    listStudentAdapter.filter(editable.toString());
+                }
+            }
+        });
     }
 
     @Override
@@ -72,7 +97,7 @@ public class ListStudentFragment extends AppCompatActivity {
                     Log.d(Constants.TAG, TAG+ " Is get students by class success "+listStudentResponse.isSuccess());
                     List<Student> students = listStudentResponse.getStudents();
                     if (students != null) {
-                        listStudentAdapter = new ListStudentAdapter(students, new ListStudentAdapter.OnItemClickListener() {
+                        listStudentAdapter = new ListStudentAdapter(students,ListStudentFragment.this, new ListStudentAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Student student) {
                                 Log.d(Constants.TAG, TAG+" Selected student ID : "+student.get_id());
@@ -104,10 +129,13 @@ public class ListStudentFragment extends AppCompatActivity {
                                 intent1.putExtra("is_update", true);
                                 intent1.putExtra("mobile", student.getMobile());
                                 intent1.putExtra("transport", student.isTransport());
+                                intent1.putExtra("date", student.getDate());
                                 startActivity(intent1);
                             }
                         });
                         mRecyclerView.setAdapter(listStudentAdapter);
+                    } else {
+                        Toast.makeText(ListStudentFragment.this, "No students added in class "+selectedClass, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

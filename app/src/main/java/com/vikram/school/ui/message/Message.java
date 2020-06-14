@@ -1,9 +1,12 @@
 package com.vikram.school.ui.message;
 
+import java.util.Date;
+
 public class Message {
     private String message;
     private String stdClass;
     private String session;
+    private Date date;
 
     public Message(String message, String stdClass, String session) {
         this.message = message;
@@ -33,5 +36,13 @@ public class Message {
 
     public void setSession(String session) {
         this.session = session;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.vikram.school.api.ISchoolAPI;
 import com.vikram.school.api.WebService;
+import com.vikram.school.ui.message.list.ListMessageResponse;
 import com.vikram.school.utility.Constants;
 import com.vikram.school.utility.PreferenceManager;
 
@@ -38,5 +39,27 @@ public class MessageRepository {
             }
         });
         return messageResult;
+    }
+
+    public LiveData<ListMessageResponse> getMessages(String session) {
+        iSchoolAPI = WebService.instance().getRetrofitClient().create(ISchoolAPI.class);
+        final MutableLiveData<ListMessageResponse> listMessagesResult = new MutableLiveData<ListMessageResponse>();
+        Call<ListMessageResponse> call = iSchoolAPI.getMessages(session, PreferenceManager.instance().getToken());
+        Log.d(Constants.TAG, TAG+" Try to get messages");
+        call.enqueue(new Callback<ListMessageResponse>() {
+            @Override
+            public void onResponse(Call<ListMessageResponse> call, Response<ListMessageResponse> response) {
+                Log.d(Constants.TAG, TAG+" get messages request success");
+                ListMessageResponse tempResult = response.body();
+                listMessagesResult.setValue(tempResult);
+            }
+
+            @Override
+            public void onFailure(Call<ListMessageResponse> call, Throwable t) {
+                Log.e(Constants.TAG, TAG+" Error in getting messages");
+                listMessagesResult.setValue(null);
+            }
+        });
+        return listMessagesResult;
     }
 }

@@ -51,4 +51,8 @@
     <string name="send">Send</string>
     <string name="send_broadcast">Send message</string>
     <string name="transport">Transport</string>
+    <string name="send_to">Sent To</string>
+    <string name="message_body">Message Body</string>
+    <string name="date">Date</string>
+    <string name="all_sent_message">All messages sent in </string>
 </resources>

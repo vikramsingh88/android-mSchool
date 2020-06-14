@@ -4,6 +4,7 @@
     android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:layout_marginTop="5dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
@@ -96,12 +97,13 @@
 
             <TextView
                 android:id="@+id/txt_address"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
+                android:layout_toRightOf="@+id/txt_lbl__address"
+                android:textAlignment="textEnd"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </RelativeLayout>

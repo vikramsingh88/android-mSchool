@@ -9,6 +9,7 @@ import com.vikram.school.ui.login.LoginResult;
 import com.vikram.school.ui.login.User;
 import com.vikram.school.ui.message.Message;
 import com.vikram.school.ui.message.MessageResponse;
+import com.vikram.school.ui.message.list.ListMessageResponse;
 import com.vikram.school.ui.slideshow.Classes;
 import com.vikram.school.ui.slideshow.ClassesResponse;
 import com.vikram.school.ui.student.ClassTeacherResponse;
@@ -95,4 +96,11 @@ public interface ISchoolAPI {
     })
     @POST("send-message/")
     Call<MessageResponse> sendMessage(@Body Message message, @Header("Authorization") String authHeader);
+
+    @Headers({
+            "Content-Type: application/json",
+            "Accept-Charset: utf-8"
+    })
+    @GET("get-messages/{session}")
+    Call<ListMessageResponse> getMessages(@Path("session") String session, @Header("Authorization") String authHeader);
 }

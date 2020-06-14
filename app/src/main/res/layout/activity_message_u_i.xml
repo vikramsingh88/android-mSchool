@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.message.MessageUIActivity">
 
+    <ProgressBar
+        android:id="@+id/send_message_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"

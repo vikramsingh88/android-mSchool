@@ -35,6 +35,7 @@ public class ListStudentRepository {
             @Override
             public void onFailure(Call<ListStudentResponse> call, Throwable t) {
                 Log.e(Constants.TAG, TAG+" Error in getting students by class name");
+                listStudentResult.setValue(null);
             }
         });
         return listStudentResult;

@@ -75,6 +75,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
     private ProgressBar mAddProgressBar;
     private Bitmap bitmap;
     private CheckBox chkTransport;
+    private String date;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
             chkTransport.setChecked(intent.getBooleanExtra("transport", false));
             spinner.setEnabled(false);
             editClassTeacher.setText(intent.getStringExtra("class_teacher"));
+            date = intent.getStringExtra("date");
             btnAddStudent.setText(R.string.update_student);
             setTitle(R.string.update_student);
             if(intent.getStringExtra("image") != null) {
@@ -256,6 +258,7 @@ public class AddStudentFragment extends AppCompatActivity implements AdapterView
         mAddProgressBar.setVisibility(View.VISIBLE);
         if (isUpdate && studentId != null) {
             student.set_id(studentId);
+            student.setDate(date);
             studentViewModel.updateStudent(student).observe(this, new Observer<StudentResponse>() {
                 @Override
                 public void onChanged(StudentResponse response) {

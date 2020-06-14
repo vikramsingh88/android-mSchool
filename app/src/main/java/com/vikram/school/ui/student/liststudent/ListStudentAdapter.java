@@ -1,6 +1,9 @@
 package com.vikram.school.ui.student.liststudent;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.vikram.school.utility.Constants;
 import com.vikram.school.utility.Utility;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -27,8 +31,10 @@ import java.util.TimeZone;
 public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.ListStudentHolder>{
     private String TAG = "ListStudentAdapter";
     private List<Student> mListStudents;
+    private List<Student> mFilterList = new ArrayList<>();
     private final OnItemClickListener listener;
     private int previousColor;
+    private Context mContext;
 
     public interface OnItemClickListener {
         void onItemClick(Student student);
@@ -65,9 +71,12 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
     }
 
 
-    public ListStudentAdapter(List<Student> studentsList, OnItemClickListener listener) {
+    public ListStudentAdapter(List<Student> studentsList, Context context, OnItemClickListener listener) {
         this.mListStudents = studentsList;
         this.listener = listener;
+        this.mContext = context;
+        this.mFilterList.clear();
+        this.mFilterList.addAll(this.mListStudents);
     }
 
     @Override
@@ -81,14 +90,14 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
     @Override
     public void onBindViewHolder(ListStudentHolder holder, int position) {
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        int color = generator.getColor(mListStudents.get(position));
+        int color = generator.getRandomColor();
         Log.d(Constants.TAG, TAG+" Current color "+color+" previous color "+previousColor);
         if (color == previousColor) {
-            color = generator.getColor(mListStudents.get(position));
+            color = generator.getColor(mFilterList.get(position));
         }
         previousColor = color;
         holder.row.setBackgroundColor(color);
-        final Student student = mListStudents.get(position);
+        final Student student = mFilterList.get(position);
         holder.txtStudentName.setText(student.getStudentName());
         holder.txtFatherName.setText(student.getFatherName());
         holder.txtAddress.setText(student.getAddress());
@@ -128,7 +137,45 @@ public class ListStudentAdapter extends RecyclerView.Adapter<ListStudentAdapter.
 
     @Override
     public int getItemCount() {
-        return mListStudents == null ? 0 : mListStudents.size();
+        return mFilterList == null ? 0 : mFilterList.size();
+    }
+
+    //Searching item
+    public void filter(final String text) {
+        Log.d(Constants.TAG, TAG+" Filter contacts method called");
+        // Searching could be complex..so we will dispatch it to a different thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Clear the filter list
+                mFilterList.clear();
+                // If there is no search value, then add all original list items to filter list
+                if (TextUtils.isEmpty(text)) {
+                    Log.d(Constants.TAG, TAG+" mListStudents : "+mListStudents);
+                    if (mListStudents != null) {
+                        mFilterList.addAll(mListStudents);
+                    }
+                } else {
+                    // Iterate in the original List and add it to filter list
+                    if (mListStudents != null) {
+                        for (Student item : mListStudents) {
+                            if (item.getStudentName().toLowerCase().contains(text.toLowerCase())) {
+                                // Adding Matched items
+                                mFilterList.add(item);
+                            }
+                        }
+                    }
+                }
+                // Set on UI Thread
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Notify the List that the DataSet has changed
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 }
 

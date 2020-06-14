@@ -19,8 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.message.MessageUIActivity"
-            android:label="@string/send_broadcast"></activity>
+        <activity android:name=".ui.message.list.ListMessageActivity"
+            android:label="@string/all_sent_message"></activity>
+        <activity
+            android:name=".ui.message.MessageUIActivity"
+            android:label="@string/send_broadcast" />
         <activity android:name=".ui.listfee.ListFeesActivity" />
         <activity android:name=".ui.listfee.ListFeesTableActivity" />
         <activity

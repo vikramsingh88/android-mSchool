@@ -38,4 +38,17 @@ public class Utility {
         Log.d(Constants.TAG, TAG+" formatted date "+str);
         return str;
     }
+
+    public static String formatDate(Date date) {
+        Log.d(Constants.TAG, TAG+" String date "+date);
+        String str = "";
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            str = formatter.format(date);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        Log.d(Constants.TAG, TAG+" formatted date "+str);
+        return str;
+    }
 }

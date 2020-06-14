@@ -62,7 +62,7 @@ public class ListClassesAdapter extends RecyclerView.Adapter<ListClassesAdapter.
     @Override
     public void onBindViewHolder(ListClassesHolder holder, int position) {
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        int color = generator.getColor(mListClasses.get(position));
+        int color = generator.getRandomColor();
         Log.d(Constants.TAG, TAG+" Current color "+color+" previous color "+previousColor);
         if (color == previousColor) {
             color = generator.getColor(mListClasses.get(position));
